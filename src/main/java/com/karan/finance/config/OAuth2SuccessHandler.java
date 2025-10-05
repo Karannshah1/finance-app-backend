@@ -5,6 +5,7 @@ import com.karan.finance.entity.User;
 
 import com.karan.finance.repository.UserRepository;
 import com.karan.finance.security.JwtUtil;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +35,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
+
+    @PostConstruct
+    public void checkConfiguration() {
+        logger.info("--- OAUTH2 SUCCESS HANDLER CONFIGURATION ---");
+        if (redirectUri.contains("ConfigError")) {
+            logger.error("FATAL: The 'app.oauth2.redirect-uri' environment variable is not set!");
+            logger.error("Please add this variable to your deployment environment.");
+        } else {
+            logger.info("Redirect URI successfully loaded: {}", redirectUri);
+        }
+        logger.info("---------------------------------------------");
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -81,9 +94,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        for local
 //        String redirectUrl = "http://localhost:3000/dashboard";
-        String redirectUrl = "https://financelite.netlify.app/dashboard";
+//        String redirectUrl = "https://financelite.netlify.app/dashboard";
 
-        String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
+        String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("token", token)
                 .build().toUriString();
         logger.info("Redirecting user to target URL: {}", targetUrl);
