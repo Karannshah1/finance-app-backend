@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/oauth2/**",
                                 "/",
+                                "login/oauth2/code/**",
                                 "api/login/**",
                                 "/login**",
                                 "/static/**",
@@ -51,14 +52,14 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2SuccessHandler)
-                )
+                );
 
-                .rememberMe(rememberMe -> rememberMe
-                // Wire the token repository to the rememberMe configuration
-                .tokenRepository(persistentTokenRepository())
-                // Set how long the "remember me" cookie is valid (e.g., 30 days)
-                .tokenValiditySeconds(86400 * 30)
-        );
+//                .rememberMe(rememberMe -> rememberMe
+//                // Wire the token repository to the rememberMe configuration
+//                .tokenRepository(persistentTokenRepository())
+//                // Set how long the "remember me" cookie is valid (e.g., 30 days)
+//                .tokenValiditySeconds(86400 * 30)
+//        );
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -85,16 +86,16 @@ public class SecurityConfig {
     }
 
     //  CORS configuration
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowedOrigins(List.of("http://localhost:3000"));
-//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        config.setAllowedHeaders(List.of("*"));
-//        config.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", config);
-//        return source;
-//    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://financelite.netlify.app")); // Add both local and prod
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 }
