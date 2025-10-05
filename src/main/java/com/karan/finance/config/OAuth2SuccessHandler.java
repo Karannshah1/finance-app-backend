@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -28,6 +29,8 @@ import java.util.Optional;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private static final Logger logger = LoggerFactory.getLogger(OAuth2SuccessHandler.class);
 
+    @Value("${app.oauth2.redirect-uri:/login?error=ConfigError}")
+    private String redirectUri;
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
@@ -91,7 +94,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 4. Perform the redirect
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
-        response.sendRedirect(redirectUrl);
 
         // Return JSON response with token
 //        Map<String, Object> responseBody = new HashMap<>();
