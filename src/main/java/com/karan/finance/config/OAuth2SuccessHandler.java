@@ -62,15 +62,15 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.sendRedirect(redirectUrl);
 
         // Return JSON response with token
-//        Map<String, Object> responseBody = new HashMap<>();
-//        responseBody.put("token", token);
-//        responseBody.put("email", email);
-//        responseBody.put("name", name);
-//        responseBody.put("message", "Login successful via Google OAuth2");
-//
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.setStatus(HttpServletResponse.SC_OK);
-//        objectMapper.writeValue(response.getWriter(), responseBody);
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+        responseBody.put("email", email);
+        responseBody.put("name", name);
+        responseBody.put("message", "Login successful via Google OAuth2");
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+        objectMapper.writeValue(response.getWriter(), responseBody);
     }
 }
