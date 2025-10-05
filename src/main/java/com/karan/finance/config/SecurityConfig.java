@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // Enable CORS
+//                .cors(Customizer.withDefaults()) // Enable CORS
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
@@ -50,7 +50,9 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2SuccessHandler)
-                ).rememberMe(rememberMe -> rememberMe
+                )
+
+                .rememberMe(rememberMe -> rememberMe
                 // Wire the token repository to the rememberMe configuration
                 .tokenRepository(persistentTokenRepository())
                 // Set how long the "remember me" cookie is valid (e.g., 30 days)
@@ -82,16 +84,16 @@ public class SecurityConfig {
     }
 
     //  CORS configuration
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowedOrigins(List.of("http://localhost:3000"));
+//        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        config.setAllowedHeaders(List.of("*"));
+//        config.setAllowCredentials(true);
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//        return source;
+//    }
 }

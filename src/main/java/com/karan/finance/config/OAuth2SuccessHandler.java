@@ -55,7 +55,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtUtil.generateJwtToken(email);
 
 //        String redirectUrl = "http://localhost:3000/login?token=" + token + "&email=" + email;
-        String redirectUrl = "http://localhost:3000/dashboard";
+
+//        for local
+//        String redirectUrl = "http://localhost:3000/dashboard";
+        String redirectUrl = "https://financelite.netlify.app/dashboard";
         response.sendRedirect(redirectUrl);
 
         // Return JSON response with token
