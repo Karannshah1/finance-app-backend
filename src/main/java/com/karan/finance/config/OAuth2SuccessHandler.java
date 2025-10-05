@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
@@ -59,18 +61,29 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 //        for local
 //        String redirectUrl = "http://localhost:3000/dashboard";
         String redirectUrl = "https://financelite.netlify.app/dashboard";
+
+        String targetUrl = UriComponentsBuilder.fromUriString(redirectUrl)
+                .queryParam("token", token)
+                .build().toUriString();
+
+        // 3. Clear any temporary session attributes
+        clearAuthenticationAttributes(request);
+
+        // 4. Perform the redirect
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
         response.sendRedirect(redirectUrl);
 
         // Return JSON response with token
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("token", token);
-        responseBody.put("email", email);
-        responseBody.put("name", name);
-        responseBody.put("message", "Login successful via Google OAuth2");
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(response.getWriter(), responseBody);
+//        Map<String, Object> responseBody = new HashMap<>();
+//        responseBody.put("token", token);
+//        responseBody.put("email", email);
+//        responseBody.put("name", name);
+//        responseBody.put("message", "Login successful via Google OAuth2");
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        objectMapper.writeValue(response.getWriter(), responseBody);
     }
 }
