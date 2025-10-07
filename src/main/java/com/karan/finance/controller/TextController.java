@@ -25,7 +25,7 @@ public class TextController {
     }
 
     @GetMapping
-    public ResponseEntity<TextResponse> healthCheck() {
+    public ResponseEntity<String> healthCheck() {
         
         return ResponseEntity.ok("Health is ok.");
     }
