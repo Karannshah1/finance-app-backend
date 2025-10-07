@@ -24,6 +24,12 @@ public class TextController {
         this.textStorageService = textStorageService;
     }
 
+    @GetMapping
+    public ResponseEntity<TextResponse> healthCheck() {
+        
+        return ResponseEntity.ok("Health is ok.");
+    }
+
     @PostMapping("/text")
     public ResponseEntity<TextResponse> saveText(@Valid @RequestBody TextRequest request) {
         int assignedNumber = textStorageService.saveText(request.getText());
